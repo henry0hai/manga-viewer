@@ -1,0 +1,23 @@
+{
+  "name": "manga-viewer",
+  "version": "1.0.0",
+  "description": "A Next.js application to view manga images in a stacked format.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-intersection-observer": "^9.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "typescript": "latest"
+  },
+  "license": "MIT"
+}

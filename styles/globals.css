@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+.manga-image {
+    display: block;
+    margin: 10px auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- ChapterNav Styling --- */
+.chapter-nav {
+    /* Default Hidden State */
+    opacity: 0;
+    max-height: 0; /* Start collapsed */
+    overflow: hidden;
+    pointer-events: none; /* Prevent interaction when hidden */
+    /* Collapse padding and border when hidden */
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+    /* Smooth transitions */
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out, border-width 0.3s ease-in-out;
+  
+    /* Layout & Sticky Positioning (applied when visible) */
+    background: #fafafa;
+    position: sticky;
+    top: var(--header-height); /* Use CSS variable for dynamic header height */
+    z-index: 9; /* Below header */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 5px 10px;
+  }
+
+/* --- Visibility Rules for ChapterNav --- */
+
+/* Define the visible state styles */
+.chapter-nav-visible-state {
+    opacity: 1;
+    max-height: 500px; /* Adjust max-height to fit potential wrapped content */
+    pointer-events: auto; /* Allow interaction */
+    /* Restore padding and border */
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    border-width: 1px; /* Explicitly set border width */
+  }
+  
+/* 1. Apply visible state on Click/Touch */
+.chapter-nav.is-visible {
+    /* Inherit all styles from .chapter-nav-visible-state */
+    @apply chapter-nav-visible-state;
+}
+  
+/* 2. Visible on Hover (Desktop) - Only applies if not already visible via click */
+/* Using a media query to target non-touch devices */
+@media (hover: hover) and (pointer: fine) {
+    .header-nav-wrapper:hover .chapter-nav:not(.is-visible) {
+        opacity: 1;
+        max-height: 500px; /* Adjust max-height */
+        pointer-events: auto;
+    }
+}
+  
+/* Optional: Hide hover effect completely on touch devices if preferred */
+@media (hover: none) and (pointer: coarse) { 
+  .header-nav-wrapper:hover .chapter-nav {
+     opacity: 0;
+     max-height: 0;
+     pointer-events: none;
+  }
+}
+
+/* --- Equivalent without @apply --- */
+/* 1. Apply visible state on Click/Touch */
+.chapter-nav.is-visible {
+    opacity: 1;
+    max-height: 500px;
+    pointer-events: auto;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    border-width: 1px;
+  }
+  
+/* 2. Apply visible state on Hover (Desktop) - Only if not already visible via click */
+@media (hover: hover) and (pointer: fine) {
+    .header-nav-wrapper:hover .chapter-nav:not(.is-visible) {
+        opacity: 1;
+        max-height: 500px;
+        pointer-events: auto;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        border-width: 1px;
+    }
+}
+/* --- End equivalent --- */
