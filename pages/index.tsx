@@ -1,8 +1,9 @@
+// filepath: pages/index.tsx
 import React from 'react';
-import fs from 'fs'; // Import fs
-import path from 'path'; // Import path
+import fs from 'fs';
+import path from 'path'; 
 import { GetStaticProps } from 'next'; // Import GetStaticProps
-// import Link from 'next/link'; // Import Link for navigation
+import Link from 'next/link'; // Import Link for navigation
 
 // Define props for the Home page, including the manga list
 interface HomeProps {
@@ -14,8 +15,7 @@ const Home: React.FC<HomeProps> = ({ mangaList }) => {
         <main style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
             <h2>Welcome to the Manga Viewer</h2>
             <p>Select a manga from the sidebar or the list below to get started!</p>
-            {/* Optional: Display list on the main page too */}
-            {/* <ul>
+            <ul>
                 {mangaList.map(manga => (
                     <li key={manga}>
                         <Link href={`/manga/${manga}`}>
@@ -23,7 +23,7 @@ const Home: React.FC<HomeProps> = ({ mangaList }) => {
                         </Link>
                     </li>
                 ))}
-            </ul> */}
+            </ul>
         </main>
     );
 };
@@ -41,7 +41,6 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
         console.log('[index.tsx getStaticProps] Found manga list:', mangaList);
     } catch (error) {
         console.error(`[index.tsx getStaticProps] Error reading manga directory ${mangaBaseDir}:`, error);
-        // Handle case where directory might not exist or is unreadable
         mangaList = []; 
     }
 

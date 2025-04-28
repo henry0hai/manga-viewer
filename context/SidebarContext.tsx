@@ -1,10 +1,11 @@
+// filepath: context/SidebarContext.tsx
 import React, { createContext, useState, useContext, useCallback, ReactNode } from 'react';
 
 // Define the shape of the context data
 interface SidebarContextProps {
     isOpen: boolean;
     toggleSidebar: () => void;
-    closeSidebar: () => void; // Optional: if needed elsewhere
+    closeSidebar: () => void;
 }
 
 // Create the context with a default value (can be null or an initial state)
@@ -27,7 +28,7 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) =>
             console.log('[SidebarProvider] Setting new state:', newState);
             return newState;
         });
-    }, []); // No dependency needed if just toggling
+    }, []);
 
     const closeSidebar = useCallback(() => {
         console.log('[SidebarProvider] closeSidebar called. Current state:', isOpen);

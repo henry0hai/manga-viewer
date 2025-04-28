@@ -1,3 +1,4 @@
+// filepath: components/Sidebar.tsx
 import React, { useState } from 'react';
 import ChapterNav from './ChapterNav';
 import Link from 'next/link'; // Import Link

@@ -1,3 +1,4 @@
+// filepath: components/Layout.tsx
 import React from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -14,8 +15,7 @@ interface LayoutPageProps {
 
 const Layout: React.FC<{ children: React.ReactNode; pageProps?: LayoutPageProps }> = ({ children, pageProps }) => {
     const { isOpen } = useSidebarContext(); 
-    console.log('[Layout] Rendering. isOpen from context:', isOpen); 
-    
+  
     const scrollDirection = useScrollDirection();
 
     // Extract props for Sidebar and Header
@@ -28,7 +28,7 @@ const Layout: React.FC<{ children: React.ReactNode; pageProps?: LayoutPageProps 
         <div style={{ display: 'flex' }}>
             <SidebarToggle /> 
             <Sidebar 
-                isVisible={isOpen} // Use state from context
+                isVisible={isOpen}
                 chapters={chapters} 
                 mangaList={mangaList} 
                 currentMangaName={currentMangaName}            

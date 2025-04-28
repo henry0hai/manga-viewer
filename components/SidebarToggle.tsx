@@ -1,3 +1,4 @@
+// filepath: components/SidebarToggle.tsx
 import React from 'react';
 import { useSidebarContext } from '../context/SidebarContext'; // Import the context hook
 

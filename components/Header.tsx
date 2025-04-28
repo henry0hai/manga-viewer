@@ -1,4 +1,5 @@
-import React, { forwardRef } from 'react'; // Import forwardRef
+// filepath: components/Header.tsx
+import React, { forwardRef } from 'react';
 
 interface HeaderProps {
     title: string;
@@ -12,7 +13,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(
     ({ title, isVisible, onMouseEnter, onMouseLeave }, ref) => {
         return (
             <header
-                ref={ref} // Assign the forwarded ref here
+                ref={ref}
                 style={{
                     padding: '1rem',
                     backgroundColor: '#f0f0f0',
@@ -22,7 +23,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(
                     top: 0,
                     zIndex: 10,
                     textTransform: 'capitalize',
-                    transition: 'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out', // Adjusted visibility transition
+                    transition: 'opacity 0.5s ease-in-out, visibility 0.5s ease-in-out',
                     opacity: isVisible ? 1 : 0,
                     visibility: isVisible ? 'visible' : 'hidden',
                 }}
