@@ -4,14 +4,16 @@ import { useSidebarContext } from '../context/SidebarContext'; // Import the con
 
 const SidebarToggle: React.FC = () => {
   // Use the context hook
-  const { isOpen, toggleSidebar } = useSidebarContext(); 
+  const { isOpen, toggleSidebar } = useSidebarContext();
 
   return (
-    <button onClick={toggleSidebar} style={{
+    <button
+      onClick={toggleSidebar}
+      style={{
         position: 'fixed',
-        top: '15px',      
-        left: isOpen ? '260px' : '15px', 
-        zIndex: 1100,     
+        top: '15px',
+        left: isOpen ? '260px' : '15px',
+        zIndex: 1100,
         background: '#eee',
         border: '1px solid #ccc',
         borderRadius: '50%',
@@ -21,13 +23,25 @@ const SidebarToggle: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        transition: 'left 0.3s ease', 
-        fontSize: '1.5rem', 
-    }}>
-        {isOpen ? '‹' : '☰'}
-        <span style={{ position: 'absolute', width: '1px', height: '1px', margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', whiteSpace: 'nowrap', border: 0 }}>
-            {isOpen ? 'Close Sidebar' : 'Open Sidebar'}
-        </span>
+        transition: 'left 0.3s ease',
+        fontSize: '1.5rem',
+      }}
+    >
+      {isOpen ? '‹' : '☰'}
+      <span
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          margin: '-1px',
+          overflow: 'hidden',
+          clip: 'rect(0,0,0,0)',
+          whiteSpace: 'nowrap',
+          border: 0,
+        }}
+      >
+        {isOpen ? 'Close Sidebar' : 'Open Sidebar'}
+      </span>
     </button>
   );
 };

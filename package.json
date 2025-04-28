@@ -21,6 +21,7 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/node": "latest",
     "@types/react": "latest",
+    "prettier": "^3.5.3",
     "typescript": "latest"
   },
   "license": "MIT"
