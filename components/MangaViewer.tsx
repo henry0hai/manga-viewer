@@ -21,7 +21,7 @@ const extractSortKeys = (filename: string): { chapter: number; page: number } =>
     return { chapter: Infinity, page: Infinity };
 };
 
-const MAX_DISPLAY_WIDTH = 800; 
+const MAX_DISPLAY_WIDTH = 1000; 
 
 const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, images }) => {
     const headerHeight = 60; 
@@ -43,21 +43,21 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, images }) => {
                         key={image.filename} // Use filename as key
                         id={divId}
                         style={{ 
+                            textAlign: 'center', 
                             scrollMarginTop: `${totalStickyHeight}px`,  
                             width: '100%', 
-                            maxWidth: `${MAX_DISPLAY_WIDTH}px`, // Apply max display width
+                            maxWidth: `${MAX_DISPLAY_WIDTH}px`, 
                             fontSize: 0, // Prevent extra space below image
                         }} 
                     >
                         <Image
                             src={imageUrl}
                             alt={`Page ${image.filename}`}
-                            // Use actual dimensions from the image object
                             width={image.width} 
                             height={image.height}
-                            // layout="responsive" // Consider using responsive layout
                             priority={index < 3} 
                             quality={75} 
+                            style={{ width: '100%', height: 'auto' }} 
                         />
                     </div>
                 );
