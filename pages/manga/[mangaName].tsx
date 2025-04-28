@@ -5,15 +5,27 @@ import { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react'; 
 import MangaViewer from '../../components/MangaViewer';
 
+import sizeOf from 'image-size'; 
+
+interface MangaImage {
+    filename: string;
+    width: number;
+    height: number;
+}
+
 interface MangaPageProps {
     mangaName: string;
-    imageFilenames: string[];
+    images: MangaImage[]; 
     chapters: number[];
 }
 
-const MangaPage: React.FC<MangaPageProps> = ({ mangaName, imageFilenames, chapters }) => {
+const MANGA_PAGE_WIDTH = 800; 
+const MANGA_PAGE_HEIGHT = 1800; 
+
+const MangaPage: React.FC<MangaPageProps> = ({ mangaName, images, chapters }) => {
+    // Pass the 'images' array to MangaViewer
     return (
-        <MangaViewer mangaName={mangaName} imageFilenames={imageFilenames} />
+        <MangaViewer mangaName={mangaName} images={images} />
     );
 };
 
@@ -51,48 +63,69 @@ export const getStaticProps: GetStaticProps<MangaPageProps, { mangaName: string 
     const mangaName = context.params?.mangaName;
 
     if (!mangaName) {
+        console.log(`[getStaticProps] No mangaName found in params.`);
         return { notFound: true };
     }
 
     const mangaFolderPath = path.join(process.cwd(), 'public/manga', mangaName);
-    let imageFilenames: string[] = [];
+    
+    // Change to store MangaImage objects
+    let imagesData: MangaImage[] = []; 
     const chapterSet = new Set<number>();
 
     try {
         const files = fs.readdirSync(mangaFolderPath);
-        imageFilenames = files
-            .filter(file => /\.(jpg|jpeg|png)$/i.test(file))
-            .sort((a, b) => {
-                const keysA = extractSortKeys(a);
-                const keysB = extractSortKeys(b);
-                // Handle potential Infinity cases if needed, though sorting should place them last
-                return keysA.chapter !== keysB.chapter 
-                    ? keysA.chapter - keysB.chapter 
-                    : keysA.page - keysB.page;
-            });
+        console.log(`[getStaticProps] Found files in ${mangaName}:`, files.length); 
 
-        imageFilenames.forEach(filename => {
-            const keys = extractSortKeys(filename);
+        const imageFilenames = files
+            .filter(file => /\.(jpg|jpeg|png)$/i.test(file));
+        
+        // Get dimensions and sort
+        imagesData = imageFilenames.map(filename => {
+            const filePath = path.join(mangaFolderPath, filename);
+            try {
+                const fileBuffer = fs.readFileSync(filePath);
+                const dimensions = sizeOf(fileBuffer);
+                return { 
+                    filename, 
+                    width: dimensions.width ?? MANGA_PAGE_WIDTH, // Fallback width
+                    height: dimensions.height ?? MANGA_PAGE_HEIGHT // Fallback height
+                };
+            } catch (e) {
+                console.error(`[getStaticProps] Error getting dimensions for ${filename}:`, e);
+                // Provide fallback dimensions if sizeOf fails
+                return { filename, width: MANGA_PAGE_WIDTH, height: MANGA_PAGE_HEIGHT }; 
+            }
+        }).sort((a, b) => {
+            const keysA = extractSortKeys(a.filename);
+            const keysB = extractSortKeys(b.filename);
+            return keysA.chapter !== keysB.chapter 
+                ? keysA.chapter - keysB.chapter 
+                : keysA.page - keysB.page;
+        });
+
+        console.log(`[getStaticProps] Processed image data count: ${imagesData.length}`); 
+
+        imagesData.forEach(img => {
+            const keys = extractSortKeys(img.filename);
             if (keys.chapter !== Infinity) {
                 chapterSet.add(keys.chapter);
             }
         });
     } catch (error) {
-        console.error(`[getStaticProps] Error reading directory ${mangaFolderPath}:`, error);
+        console.error(`[getStaticProps] Error processing directory ${mangaFolderPath}:`, error);
         return { notFound: true }; 
     }
 
     const chapters = Array.from(chapterSet).sort((a, b) => a - b);
 
-    // Ensure props are returned correctly
     return {
         props: {
             mangaName,
-            imageFilenames,
+            images: imagesData,
             chapters,
         },
     };
 };
-
 
 export default MangaPage;

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      image-size:
+        specifier: ^2.0.2
+        version: 2.0.2
       next:
         specifier: latest
         version: 15.3.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -21,6 +24,9 @@ importers:
         specifier: ^9.16.0
         version: 9.16.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
+      '@types/image-size':
+        specifier: ^0.8.0
+        version: 0.8.0
       '@types/node':
         specifier: latest
         version: 22.15.2
@@ -203,6 +209,10 @@ packages:
   '@swc/helpers@0.5.15':
     resolution: {integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g==}
 
+  '@types/image-size@0.8.0':
+    resolution: {integrity: sha512-hMlhu25ji75dXQk2uZkN3pTJ+lWrgKr8M1fTpyyFvuu+SJZBdGa5gDm4BVNobWXHZbOU11mBj0vciYp7qOfAFg==}
+    deprecated: This is a stub types definition. image-size provides its own type definitions, so you do not need this installed.
+
   '@types/node@22.15.2':
     resolution: {integrity: sha512-uKXqKN9beGoMdBfcaTY1ecwz6ctxuJAcUlwE55938g0ZJ8lRxwAZqRz2AJ4pzpt5dHdTPMB863UZ0ESiFUcP7A==}
 
@@ -239,6 +249,11 @@ packages:
   detect-libc@2.0.4:
     resolution: {integrity: sha512-3UDv+G9CsCKO1WKMGw9fwq/SWJYbI0c5Y7LU1AXYoDdbhE2AHQ6N6Nb34sG8Fj7T5APy8qXDCKuuIHd1BR0tVA==}
     engines: {node: '>=8'}
+
+  image-size@2.0.2:
+    resolution: {integrity: sha512-IRqXKlaXwgSMAMtpNzZa1ZAe8m+Sa1770Dhk8VkSsP9LS+iHD62Zd8FQKs8fbPiagBE7BzoFX23cxFnwshpV6w==}
+    engines: {node: '>=16.x'}
+    hasBin: true
 
   is-arrayish@0.3.2:
     resolution: {integrity: sha512-eVRqCvVlZbuw3GrM63ovNSNAeA1K16kaR/LRY/92w0zxQ5/1YzwblUX652i4Xs9RwAGjW9d9y6X88t8OaAJfWQ==}
@@ -458,6 +473,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@types/image-size@0.8.0':
+    dependencies:
+      image-size: 2.0.2
+
   '@types/node@22.15.2':
     dependencies:
       undici-types: 6.21.0
@@ -498,6 +517,8 @@ snapshots:
 
   detect-libc@2.0.4:
     optional: true
+
+  image-size@2.0.2: {}
 
   is-arrayish@0.3.2:
     optional: true
