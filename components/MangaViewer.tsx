@@ -7,14 +7,13 @@ interface MangaViewerProps {
     imageFilenames: string[];
 }
 
-// Placeholder component (optional, but good for layout stability)
 const ImagePlaceholder: React.FC<{ height?: string }> = ({ height = '600px' }) => (
     <div style={{
-        height: height, // Estimate or set a min-height
+        height: height,
         width: '100%',
-        maxWidth: '800px', // Match image max-width if possible
+        maxWidth: '800px',
         margin: '5px auto',
-        backgroundColor: '#f0f0f0', // Simple background
+        backgroundColor: '#f0f0f0', 
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -40,8 +39,6 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, imageFilenames }) 
 
     // Intersection Observer options
     const observerOptions = {
-        // Load the image when it's 1000px below the viewport
-        // Adjust this value based on typical image height and desired pre-loading amount
         rootMargin: '0px 0px 1000px 0px',
         triggerOnce: true, // Only trigger once per image
     };
@@ -62,25 +59,23 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, imageFilenames }) 
                     <div
                         ref={ref} // Attach the ref to the div
                         key={index}
-                        id={divId} // Add the ID here
+                        id={divId}
                         style={{ 
                             textAlign: 'center', 
                             scrollMarginTop: `${totalStickyHeight}px`,  
-                            // Set a min-height to prevent layout shifts before image loads
                             minHeight: '300px',
-                            marginTop: '-5px', // Adjust margin to prevent overlap with sticky header
-                        }} // Add scroll margin to offset sticky headers
+                            marginTop: '-5px', 
+                        }} 
                     >
-                        {/* Conditionally render the image or a placeholder */}
                         {inView ? (
                             <img
                                 src={`/manga/${mangaName}/${filename}`}
                                 alt={filename}
                                 style={{ display: 'block', margin: '5px auto', maxWidth: '100%', height: 'auto' }}
-                                loading="lazy" // Add native browser lazy loading as a fallback/enhancement
+                                loading="lazy"
                             />
                         ) : (
-                            (<ImagePlaceholder />) // Show placeholder until inView is true
+                            (<ImagePlaceholder />)
                         )}
                     </div>
                 );
