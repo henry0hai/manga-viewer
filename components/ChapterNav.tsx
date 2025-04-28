@@ -1,53 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react'; // Removed useState
 
 interface ChapterNavProps {
-    chapters: number[];
-    isVisible?: boolean; // Controls visibility of the nav
-    headerHeight: number; // For positioning below the header
+    chapters: number[]; // This will now be the *filtered* list from Sidebar
+    isVisible?: boolean; 
+    headerHeight: number; 
 }
 
+// Remove internal state and filtering logic
 const ChapterNav: React.FC<ChapterNavProps> = ({ chapters, isVisible = true, headerHeight }) => {
-    const [searchTerm, setSearchTerm] = useState('');
+    // const [searchTerm, setSearchTerm] = useState(''); // Remove state
+    // const filteredChapters = chapters.filter(...); // Remove filtering
 
-    const filteredChapters = chapters.filter(chapter => 
-        chapter.toString().includes(searchTerm)
-    );
-
+    // Handle case where the filtered list might be empty
     if (!chapters || chapters.length === 0) {
-        return null;
+        // Optionally show a message if search yields no results
+        return <p style={{color: '#888', fontSize: '0.9em'}}>No matching chapters found.</p>;
     }
 
     return (
+        // Keep the nav structure, but remove the input
         <nav style={{
-            padding: '10px',
-            borderBottom: '1px solid #eee',
-            background: '#fafafa',
-            position: 'sticky',
-            top: `${headerHeight}px`,
-            zIndex: 9,
+            // padding: '10px', // Padding is likely handled by Sidebar now
+            // borderBottom: '1px solid #eee', // Styling might be adjusted based on Sidebar
+            // background: '#fafafa', // Styling might be adjusted based on Sidebar
+            // position: 'sticky', // No longer sticky within the sidebar scroll container
+            // top: `${headerHeight}px`, // Not needed if not sticky
+            // zIndex: 9, // Not needed
             display: isVisible ? 'block' : 'none',
-            transition: 'opacity 0.5s ease-in-out',
-            opacity: isVisible ? 1 : 0,
+            // transition: 'opacity 0.5s ease-in-out', // Transitions handled by Sidebar
+            // opacity: isVisible ? 1 : 0, // Visibility handled by Sidebar
         }}>
-            <input
+            {/* Remove the search input element */}
+            {/* <input
                 type="text"
                 placeholder="Search chapters..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{
-                    marginBottom: '10px',
-                    padding: '5px',
-                    width: '100%',
-                    borderRadius: '4px',
-                    border: '1px solid #ccc',
-                }}
-            />
+                style={{...}}
+            /> */}
             <span style={{ fontWeight: 'bold', display: 'block', marginBottom: '10px' }}>Chapters:</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                {filteredChapters.map((chapter) => (
+                {/* Map directly over the chapters prop (already filtered by Sidebar) */}
+                {chapters.map((chapter) => ( 
                     <a
                         key={chapter}
-                        href={`#chapter-${chapter}`}
+                        href={`#chapter-${chapter}`} // Keep link logic for scrolling to chapter sections
                         style={{
                             padding: '3px 8px',
                             textDecoration: 'none',
