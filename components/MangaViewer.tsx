@@ -80,7 +80,7 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, imageFilenames }) 
                                 loading="lazy" // Add native browser lazy loading as a fallback/enhancement
                             />
                         ) : (
-                            <ImagePlaceholder /> // Show placeholder until inView is true
+                            (<ImagePlaceholder />) // Show placeholder until inView is true
                         )}
                     </div>
                 );
