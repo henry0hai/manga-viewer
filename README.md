@@ -52,7 +52,7 @@ manga-viewer
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone git@github.com:henry0hai/manga-viewer.git
     cd manga-viewer
     ```
 
