@@ -1,11 +1,17 @@
 import '../styles/globals.css';
-import React from 'react';
 import type { AppProps } from 'next/app';
+import Layout from '../components/Layout';
+import React from 'react';
+import { SidebarProvider } from '../context/SidebarContext'; // Import the provider
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <> {/* Use a Fragment or a div to wrap multiple elements */}
-      <Component {...pageProps} />;
-    </>
+    // Wrap the Layout (and thus the whole app) with the Provider
+    <SidebarProvider>
+      <Layout pageProps={pageProps}>
+        <Component {...pageProps} />
+      </Layout>
+    </SidebarProvider>
   );
 }
 

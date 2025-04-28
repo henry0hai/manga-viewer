@@ -1,106 +1,89 @@
-body {
+html, body {
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
 header {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-}
-
-.manga-image {
-    display: block;
-    margin: 10px auto;
-    max-width: 100%;
-    height: auto;
-}
-
-/* --- ChapterNav Styling --- */
-.chapter-nav {
-    /* Default Hidden State */
-    opacity: 0;
-    max-height: 0; /* Start collapsed */
-    overflow: hidden;
-    pointer-events: none; /* Prevent interaction when hidden */
-    /* Collapse padding and border when hidden */
-    padding-top: 0;
-    padding-bottom: 0;
-    border-width: 0;
-    /* Smooth transitions */
-    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out, padding 0.3s ease-in-out, border-width 0.3s ease-in-out;
-  
-    /* Layout & Sticky Positioning (applied when visible) */
-    background: #fafafa;
     position: sticky;
-    top: var(--header-height); /* Use CSS variable for dynamic header height */
-    z-index: 9; /* Below header */
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 5px 10px;
-  }
+    top: 0;
+    z-index: 10;
+    background-color: #fff;
+    transition: opacity 0.5s ease-in-out, visibility 1s ease-in-out;
+}
 
-/* --- Visibility Rules for ChapterNav --- */
-
-/* Define the visible state styles */
-.chapter-nav-visible-state {
-    opacity: 1;
-    max-height: 500px; /* Adjust max-height to fit potential wrapped content */
-    pointer-events: auto; /* Allow interaction */
-    /* Restore padding and border */
+nav {
+    position: sticky;
+    top: 112px; /* Adjust based on header height */
+    z-index: 9;
+    background: #fafafa;
     padding: 10px;
     border-bottom: 1px solid #eee;
-    border-width: 1px; /* Explicitly set border width */
-  }
-  
-/* 1. Apply visible state on Click/Touch */
-.chapter-nav.is-visible {
-    /* Inherit all styles from .chapter-nav-visible-state */
-    @apply chapter-nav-visible-state;
-}
-  
-/* 2. Visible on Hover (Desktop) - Only applies if not already visible via click */
-/* Using a media query to target non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-    .header-nav-wrapper:hover .chapter-nav:not(.is-visible) {
-        opacity: 1;
-        max-height: 500px; /* Adjust max-height */
-        pointer-events: auto;
-    }
-}
-  
-/* Optional: Hide hover effect completely on touch devices if preferred */
-@media (hover: none) and (pointer: coarse) { 
-  .header-nav-wrapper:hover .chapter-nav {
-     opacity: 0;
-     max-height: 0;
-     pointer-events: none;
-  }
 }
 
-/* --- Equivalent without @apply --- */
-/* 1. Apply visible state on Click/Touch */
-.chapter-nav.is-visible {
-    opacity: 1;
-    max-height: 500px;
-    pointer-events: auto;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    border-width: 1px;
-  }
-  
-/* 2. Apply visible state on Hover (Desktop) - Only if not already visible via click */
-@media (hover: hover) and (pointer: fine) {
-    .header-nav-wrapper:hover .chapter-nav:not(.is-visible) {
-        opacity: 1;
-        max-height: 500px;
-        pointer-events: auto;
-        padding: 10px;
-        border-bottom: 1px solid #eee;
-        border-width: 1px;
-    }
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    transform: translateX(-100%); /* Hide by default */
 }
-/* --- End equivalent --- */
+
+.sidebar.open {
+    transform: translateX(0); /* Show when open */
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 20;
+    cursor: pointer;
+}
+
+.main-content {
+    margin-left: 250px; /* Adjust based on sidebar width */
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shift {
+    margin-left: 0; /* Shift content when sidebar is open */
+}
+
+.chapter-link {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+}
+
+.chapter-link:hover {
+    background-color: #f0f0f0;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}

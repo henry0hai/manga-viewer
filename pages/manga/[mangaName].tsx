@@ -1,12 +1,13 @@
-// filepath: pages/manga/[mangaName].tsx
-
 import fs from 'fs';
 import path from 'path';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react'; // Removed useState, useEffect, useRef
 import MangaViewer from '../../components/MangaViewer';
-import Header from '../../components/Header';
-import ChapterNav from '../../components/ChapterNav'; 
+// Removed Header, ChapterNav, Sidebar, useScrollDirection imports as they are handled by Layout
+// Import Layout if it's not globally applied in _app.tsx
+// import Layout from '../../components/Layout'; 
+// Import useSidebar if needed for other reasons, but not for visibility control here
+// import useSidebar from '../../hooks/useSidebar'; 
 
 interface MangaPageProps {
     mangaName: string;
@@ -14,146 +15,115 @@ interface MangaPageProps {
     chapters: number[];
 }
 
-// Helper function to extract chapter and page numbers for sorting
-const extractSortKeys = (filename: string): { chapter: number; page: number } => {
-    // Matches chapter_NUMBER_page_NUMBER.jpg (or png, jpeg)
-    const match = filename.match(/chapter_(\d+)_page_(\d+)\.(jpg|jpeg|png)$/i);
-    if (match) {
-        return { chapter: parseInt(match[1], 10), page: parseInt(match[2], 10) };
-    }
-    // Fallback for unexpected formats, place them at the end or handle as needed
-    console.warn(`Could not parse chapter/page from filename: ${filename}`);
-    return { chapter: Infinity, page: Infinity };
-};
-
-
+// The component now just renders the MangaViewer
+// Layout will handle Header, Sidebar, and their visibility
 const MangaPage: React.FC<MangaPageProps> = ({ mangaName, imageFilenames, chapters }) => {
-    const [isNavVisible, setIsNavVisible] = useState(false);
-    const visibilityTimerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer ID
+    // Removed local state and effects for visibility control
+    // const [isNavVisible, setIsNavVisible] = useState(false);
+    // const headerRef = useRef<HTMLDivElement>(null);
+    // const scrollDirection = useScrollDirection();
+    // const { isOpen } = useSidebar(); // Not needed directly here if Layout handles it
 
-    const headerHeight = 112;
-    const displayTitle = mangaName.replace(/-/g, ' ');
+    // const displayTitle = mangaName.replace(/-/g, ' ');
 
-    // Function to show the nav and start the 5-second timer
-    const showNavAndStartTimer = () => {
-        // Clear any existing timer before starting a new one
-        if (visibilityTimerRef.current) {
-            clearTimeout(visibilityTimerRef.current);
-        }
+    // useEffect(() => { ... visibility logic removed ... }, [scrollDirection]);
 
-        setIsNavVisible(true); // Make nav visible
-
-        // Start a timer to hide the nav after 5 seconds
-        visibilityTimerRef.current = setTimeout(() => {
-            setIsNavVisible(false);
-            visibilityTimerRef.current = null; // Clear the ref after timer finishes
-        }, 3000); // 3000 milliseconds = 3 seconds
-    };
-
-    // Cleanup timer on component unmount
-    useEffect(() => {
-        return () => {
-            if (visibilityTimerRef.current) {
-                clearTimeout(visibilityTimerRef.current);
-            }
-        };
-    }, []);
-
+    // The actual rendering happens within the Layout component (applied either here or in _app.tsx)
+    // If Layout is NOT in _app.tsx, wrap it here:
+    /*
     return (
-        <div onMouseEnter={showNavAndStartTimer} >
-            <Header 
-                isVisible={isNavVisible}
-                title={displayTitle} 
-            />
-            <ChapterNav 
-                chapters={chapters} 
-                isVisible={isNavVisible} // Pass visibility state
-                headerHeight={headerHeight} // Pass header height
-                />
+        <Layout pageProps={{ chapters }}> 
             <MangaViewer mangaName={mangaName} imageFilenames={imageFilenames} />
-        </div>
+        </Layout>
+    );
+    */
+
+    // If Layout IS in _app.tsx, just return the page content:
+    return (
+        <MangaViewer mangaName={mangaName} imageFilenames={imageFilenames} />
     );
 };
 
+// --- getStaticPaths remains the same ---
 export const getStaticPaths: GetStaticPaths = async () => {
     const mangaBaseDir = path.join(process.cwd(), 'public/manga');
     let mangaNames: string[] = [];
 
     try {
-        // Read all entries in the base manga directory
         const entries = fs.readdirSync(mangaBaseDir, { withFileTypes: true });
-        // Filter for directories
         mangaNames = entries
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
     } catch (error) {
         console.error(`Error reading manga directory ${mangaBaseDir}:`, error);
-        // If the base directory doesn't exist, return no paths
     }
 
-
-    // Map directory names to the format required by getStaticPaths
     const paths = mangaNames.map(name => ({
         params: { mangaName: name },
     }));
 
-    // fallback: false means pages for manga names not returned here will result in a 404
     return { paths, fallback: false };
 };
 
+
+// --- getStaticProps remains the same ---
+// Helper function (assuming it's defined elsewhere or here)
+const extractSortKeys = (filename: string): { chapter: number; page: number } => {
+    const match = filename.match(/chapter_(\d+)_page_(\d+)\.(jpg|jpeg|png)$/i);
+    if (match) {
+        return { chapter: parseInt(match[1], 10), page: parseInt(match[2], 10) };
+    }
+    // Ensure consistent return type if no match
+    return { chapter: Infinity, page: Infinity }; 
+};
 
 export const getStaticProps: GetStaticProps<MangaPageProps, { mangaName: string }> = async (context) => {
     const mangaName = context.params?.mangaName;
 
     if (!mangaName) {
-        console.error("[getStaticProps] mangaName is missing from context.params!");
         return { notFound: true };
     }
 
     const mangaFolderPath = path.join(process.cwd(), 'public/manga', mangaName);
     let imageFilenames: string[] = [];
-    const chapterSet = new Set<number>(); 
+    const chapterSet = new Set<number>();
 
     try {
         const files = fs.readdirSync(mangaFolderPath);
         imageFilenames = files
-            .filter(file => {
-                const isImage = /\.(jpg|jpeg|png)$/i.test(file);
-                return isImage;
-            })
+            .filter(file => /\.(jpg|jpeg|png)$/i.test(file))
             .sort((a, b) => {
                 const keysA = extractSortKeys(a);
                 const keysB = extractSortKeys(b);
-                if (keysA.chapter !== keysB.chapter) {
-                    return keysA.chapter - keysB.chapter;
-                }
-                return keysA.page - keysB.page;
+                // Handle potential Infinity cases if needed, though sorting should place them last
+                return keysA.chapter !== keysB.chapter 
+                    ? keysA.chapter - keysB.chapter 
+                    : keysA.page - keysB.page;
             });
 
         imageFilenames.forEach(filename => {
             const keys = extractSortKeys(filename);
-            if (keys.chapter !== Infinity) { // Only add valid chapter numbers
+            if (keys.chapter !== Infinity) {
                 chapterSet.add(keys.chapter);
             }
         });
     } catch (error) {
         console.error(`[getStaticProps] Error reading directory ${mangaFolderPath}:`, error);
-        return { notFound: true };
+        // It's often better to return notFound here if the directory is expected but missing/unreadable
+        return { notFound: true }; 
     }
 
     const chapters = Array.from(chapterSet).sort((a, b) => a - b);
 
-    // Ensure props are actually being returned
-    const props = {
-        mangaName,
-        imageFilenames,
-        chapters,
-    };
-
+    // Ensure props are returned correctly
     return {
-        props: props,
-        // revalidate: 60,
+        props: {
+            mangaName,
+            imageFilenames,
+            chapters,
+        },
     };
 };
+
 
 export default MangaPage;
