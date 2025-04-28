@@ -19,22 +19,17 @@ interface SidebarProviderProps {
 
 export const SidebarProvider: React.FC<SidebarProviderProps> = ({ children }) => {
     const [isOpen, setIsOpen] = useState(false); // The actual state lives here
-    console.log('[SidebarProvider] State initialized/updated. isOpen:', isOpen);
 
     const toggleSidebar = useCallback(() => {
-        console.log('[SidebarProvider] toggleSidebar called. Current state:', isOpen);
         setIsOpen(prev => {
             const newState = !prev;
-            console.log('[SidebarProvider] Setting new state:', newState);
             return newState;
         });
     }, []);
 
     const closeSidebar = useCallback(() => {
-        console.log('[SidebarProvider] closeSidebar called. Current state:', isOpen);
         if (isOpen) {
             setIsOpen(false);
-            console.log('[SidebarProvider] Setting state to false');
         }
     }, [isOpen]);
 

@@ -30,7 +30,6 @@ const Home: React.FC<HomeProps> = ({ mangaList }) => {
 
 // Fetch the list of manga directories at build time
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-    console.log('[index.tsx getStaticProps] Fetching manga list...');
     const mangaBaseDir = path.join(process.cwd(), 'public/manga');
     let mangaList: string[] = [];
     try {
@@ -38,7 +37,6 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
         mangaList = entries
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
-        console.log('[index.tsx getStaticProps] Found manga list:', mangaList);
     } catch (error) {
         console.error(`[index.tsx getStaticProps] Error reading manga directory ${mangaBaseDir}:`, error);
         mangaList = []; 

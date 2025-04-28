@@ -5,7 +5,6 @@ import { useSidebarContext } from '../context/SidebarContext'; // Import the con
 const SidebarToggle: React.FC = () => {
   // Use the context hook
   const { isOpen, toggleSidebar } = useSidebarContext(); 
-  console.log('[SidebarToggle] Rendering. isOpen from context:', isOpen); 
 
   return (
     <button onClick={toggleSidebar} style={{

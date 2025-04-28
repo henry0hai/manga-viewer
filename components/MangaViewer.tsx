@@ -1,28 +1,10 @@
-// filepath: components/MangaViewer.tsx
 import React from 'react';
-import { useInView } from 'react-intersection-observer'; 
+import Image from 'next/image'; 
 
 interface MangaViewerProps {
     mangaName: string;
     imageFilenames: string[];
 }
-
-const ImagePlaceholder: React.FC<{ height?: string }> = ({ height = '600px' }) => (
-    <div style={{
-        height: height,
-        width: '100%',
-        maxWidth: '800px',
-        margin: '5px auto',
-        backgroundColor: '#f0f0f0', 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#ccc'
-     }}>
-        Loading...
-    </div>
-);
-
 
 const extractSortKeys = (filename: string): { chapter: number; page: number } => {
     const match = filename.match(/chapter_(\d+)_page_(\d+)\.(jpg|jpeg|png)$/i);
@@ -32,51 +14,48 @@ const extractSortKeys = (filename: string): { chapter: number; page: number } =>
     return { chapter: Infinity, page: Infinity };
 };
 
+const MANGA_PAGE_WIDTH = 800; 
+const MANGA_PAGE_HEIGHT = 1800; 
+
 const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, imageFilenames }) => {
-    const headerHeight = 112; 
-    const chapterNavHeight = 50;
+    // Calculate scroll margin offset (adjust if your header/nav heights change)
+    const headerHeight = 60; // Approximate height of your sticky Header
+    const chapterNavHeight = 0; // ChapterNav is now inside Sidebar, not sticky above content
     const totalStickyHeight = headerHeight + chapterNavHeight;
 
-    // Intersection Observer options
-    const observerOptions = {
-        rootMargin: '0px 0px 1000px 0px',
-        triggerOnce: true, // Only trigger once per image
-    };
-
     return (
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {imageFilenames.map((filename, index) => {
                 const keys = extractSortKeys(filename);
-                // Add an ID if it's the first page of a valid chapter
                 const divId = (keys.page === 0 && keys.chapter !== Infinity)
                     ? `chapter-${keys.chapter}`
                     : undefined;
-
-                 // Use the useInView hook for each image container
-                 const { ref, inView } = useInView(observerOptions);
+                
+                const imageUrl = `/manga/${mangaName}/${filename}`;
 
                 return (
+                    // Container for ID, scroll margin, and controlling max-width
                     <div
-                        ref={ref} // Attach the ref to the div
-                        key={index}
+                        key={filename} // Use filename as key for stability
                         id={divId}
                         style={{ 
                             textAlign: 'center', 
                             scrollMarginTop: `${totalStickyHeight}px`,  
-                            minHeight: '300px',
-                            marginTop: '-5px', 
+                            width: '100%', 
+                            maxWidth: `${MANGA_PAGE_WIDTH}px`, 
+                            marginBottom: '0px',
+                            fontSize: 0, 
                         }} 
                     >
-                        {inView ? (
-                            <img
-                                src={`/manga/${mangaName}/${filename}`}
-                                alt={filename}
-                                style={{ display: 'block', margin: '5px auto', maxWidth: '100%', height: 'auto' }}
-                                loading="lazy"
-                            />
-                        ) : (
-                            (<ImagePlaceholder />)
-                        )}
+                        <Image
+                            src={imageUrl}
+                            alt={`Page ${filename}`}
+                            width={MANGA_PAGE_WIDTH} 
+                            height={MANGA_PAGE_HEIGHT}
+                            // layout="responsive" // Optional: Use if container size dictates image size, but still needs w/h for aspect ratio
+                            priority={index < 3} // Prioritize loading the first few images
+                            quality={75} // Adjust image quality
+                        />
                     </div>
                 );
             })}
