@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image'; 
+import { useMediaQuery } from 'react-responsive';
 
 // Define the shape of the image data object (should match the one in [mangaName].tsx)
 interface MangaImage {
@@ -27,6 +28,9 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, images }) => {
     const headerHeight = 60; 
     const totalStickyHeight = headerHeight;
 
+    // Check if the screen width is typical for mobile devices
+    const isMobile = useMediaQuery({ query: '(max-width: 767px)' });
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* Map over the images array */}
@@ -48,6 +52,7 @@ const MangaViewer: React.FC<MangaViewerProps> = ({ mangaName, images }) => {
                             width: '100%', 
                             maxWidth: `${MAX_DISPLAY_WIDTH}px`, 
                             fontSize: 0, // Prevent extra space below image
+                            marginBottom: isMobile ? '-3px' : '0px', // Use -1px on mobile, 0px otherwise
                         }} 
                     >
                         <Image
