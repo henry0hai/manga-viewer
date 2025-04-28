@@ -3,7 +3,10 @@ module.exports = {
   images: {
     remotePatterns: [],
   },
-  allowedDevOrigins: ['http://localhost:3000'],
+  allowedDevOrigins: [
+    'http://localhost:3000',
+    '*.ngrok-free.app'
+  ],
   experimental: {
     largePageDataBytes: 196 * 1024,
   }
